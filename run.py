@@ -35,14 +35,26 @@ plt.show()
 # k = cv.waitKey(10000)
 
 
-# %% Thresholding vs. edge detection
+# %% Global thresholding vs. adaptive mean vs. Gaussian vs. edge detection
 _, binary_mask = cv.threshold(gray, 130, 255, cv.THRESH_BINARY)
+adaptive_mean_mask = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_MEAN_C,\
+            cv.THRESH_BINARY, 11, 2)
+adaptive_gaussian_mask = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv.THRESH_BINARY, 11, 2)
 edges = cv.Canny(gray, threshold1=50, threshold2=100)
 
-plt.figure(figsize=(10, 8))
-plt.subplot(2, 2, 1); plt.imshow(gray, cmap='gray'); plt.title("Grayscale")
-plt.subplot(2, 2, 2); plt.imshow(binary_mask, cmap="gray"); plt.title("Threshold mask")
-plt.subplot(2, 2, 3); plt.imshow(edges, cmap="gray"); plt.title("Canny edges")
+
+## %% Plot all
+titles = ["Grayscale", "Threshold Mask", "Adaptive Mean Thresholding", \
+          "Adaptive Gaussian Thresholding", "Canny"]
+imgs = [gray, binary_mask, adaptive_mean_mask, adaptive_gaussian_mask, edges]
+
+plt.figure(figsize=(12, 9))
+
+for i in range(len(titles)):
+    plt.subplot(2, 3, i + 1), plt.imshow(imgs[i], "gray")
+    plt.title(titles[i])
+
 plt.show()
 
 # %% Contour detection
