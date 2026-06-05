@@ -44,7 +44,7 @@ adaptive_gaussian_mask = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUS
 # blur = cv.GaussianBlur(gray, (5,5), 0)
 _, otsu_gaussian_mask = cv.threshold(gray, 0, 255, \
                                   cv.THRESH_BINARY + cv.THRESH_OTSU)
-edges = cv.Canny(gray, threshold1=40, threshold2=70)
+edges = cv.Canny(gray, threshold1=46, threshold2=52)
 
 
 #%% Plot all
@@ -62,7 +62,7 @@ for i in range(len(titles)):
 plt.show()
 
 # %% Contour detection and overlaying on template image
-# set up contours
+# set up contours, passed in Canny object
 contours, _ = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 print(f"Found {len(contours)} contours")
 
