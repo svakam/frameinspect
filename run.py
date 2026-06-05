@@ -11,7 +11,7 @@ print("NumPy:", np.__version__)
 print("Imported")
  
 #%% Load and inspect frame
-img = cv.imread("./img/ai_baby_color_straight.png") # load as default BGR uint8
+img = cv.imread("./img/ai_baby_color_emojis.png") # load as default BGR uint8
 if img is None:
     sys.exit("Could not read the image.")
 
@@ -35,19 +35,23 @@ plt.show()
 # k = cv.waitKey(10000)
 
 
-# %% Global thresholding vs. adaptive mean vs. Gaussian vs. edge detection
+# %% Global thresholding vs. adaptive mean vs. Gaussian vs. Otsu vs. edge detection
 _, binary_mask = cv.threshold(gray, 130, 255, cv.THRESH_BINARY)
 adaptive_mean_mask = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_MEAN_C,\
             cv.THRESH_BINARY, 11, 2)
 adaptive_gaussian_mask = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C,\
             cv.THRESH_BINARY, 11, 2)
-edges = cv.Canny(gray, threshold1=50, threshold2=100)
+# blur = cv.GaussianBlur(gray, (5,5), 0)
+_, otsu_gaussian_mask = cv.threshold(gray, 0, 255, \
+                                  cv.THRESH_BINARY + cv.THRESH_OTSU)
+edges = cv.Canny(gray, threshold1=40, threshold2=70)
 
 
-## %% Plot all
-titles = ["Grayscale", "Threshold Mask", "Adaptive Mean Thresholding", \
-          "Adaptive Gaussian Thresholding", "Canny"]
-imgs = [gray, binary_mask, adaptive_mean_mask, adaptive_gaussian_mask, edges]
+#%% Plot all
+titles = ["Grayscale", "Threshold Mask", "Otsu Thresholding", \
+          "Adaptive Gaussian Thresholding", "Adaptive Mean Thresholding", "Canny"]
+imgs = [gray, binary_mask, otsu_gaussian_mask, adaptive_mean_mask, \
+        adaptive_gaussian_mask, edges]
 
 plt.figure(figsize=(12, 9))
 
@@ -57,5 +61,21 @@ for i in range(len(titles)):
 
 plt.show()
 
-# %% Contour detection
+# %% Contour detection and overlaying on template image
+# set up contours
+contours, _ = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+print(f"Found {len(contours)} contours")
 
+# copy rgb image for setting up overlay
+img_contours = img_rgb.copy()
+cv.drawContours(img_contours, contours, -1, (0, 255, 0), 2)
+
+for c in contours:
+    area = cv.contourArea(c)
+    x, y, w, h = cv.boundingRect(c)
+    print(f"Area: {area:.1f}  Bounding box: x={x}, y={y}, w={w}, h={h}")
+
+plt.imshow(img_contours)
+plt.title(f'{len(contours)} contours detected')
+plt.show()
+# %%
