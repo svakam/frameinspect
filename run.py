@@ -32,4 +32,12 @@ plt.show()
 # k = cv.waitKey(10000)
 
 
+# %% Thresholding and edge detection
+_, binary_mask = cv.threshold(gray, 130, 255, cv.THRESH_BINARY)
+
+plt.figure(figsize=(12, 4))
+plt.subplot(1, 3, 1); plt.imshow(gray, cmap='gray'); plt.title("Grayscale")
+plt.subplot(1, 3, 2); plt.imshow(binary_mask, cmap="gray"); plt.title("Threshold mask")
+# plt.subplot(1, 3, 3); plt.imshow(edges, cmap="gray"); plt.title("Canny edges")
+
 # %%
