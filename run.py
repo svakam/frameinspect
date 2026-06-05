@@ -39,10 +39,11 @@ plt.show()
 _, binary_mask = cv.threshold(gray, 130, 255, cv.THRESH_BINARY)
 edges = cv.Canny(gray, threshold1=50, threshold2=100)
 
-plt.figure(figsize=(20, 10))
-plt.subplot(1, 3, 1); plt.imshow(gray, cmap='gray'); plt.title("Grayscale")
-plt.subplot(1, 3, 2); plt.imshow(binary_mask, cmap="gray"); plt.title("Threshold mask")
-plt.subplot(1, 3, 3); plt.imshow(edges, cmap="gray"); plt.title("Canny edges")
+plt.figure(figsize=(10, 8))
+plt.subplot(2, 2, 1); plt.imshow(gray, cmap='gray'); plt.title("Grayscale")
+plt.subplot(2, 2, 2); plt.imshow(binary_mask, cmap="gray"); plt.title("Threshold mask")
+plt.subplot(2, 2, 3); plt.imshow(edges, cmap="gray"); plt.title("Canny edges")
 plt.show()
 
-# %%
+# %% Contour detection
+
