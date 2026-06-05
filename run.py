@@ -11,7 +11,7 @@ print("NumPy:", np.__version__)
 print("Imported")
  
 #%% Load and inspect frame
-img = cv.imread("./img/ai_baby_color.png") # load as default BGR uint8
+img = cv.imread("./img/ai_baby_color_straight.png") # load as default BGR uint8
 if img is None:
     sys.exit("Could not read the image.")
 
@@ -22,6 +22,9 @@ print("Shape (color):", img.shape)
 print("Shape (gray):", gray.shape)
 print("Dtype:", gray.dtype)
 print("Min max pixels:", gray.min(), gray.max())
+print("Blue @ (100,100):", img[100,100,0])
+print("Green @ (100,100):", img[100,100,1])
+print("Red @ (100,100):", img[100,100,2])
 
 # plot
 plt.figure(figsize=(10, 4))
@@ -32,12 +35,14 @@ plt.show()
 # k = cv.waitKey(10000)
 
 
-# %% Thresholding and edge detection
+# %% Thresholding vs. edge detection
 _, binary_mask = cv.threshold(gray, 130, 255, cv.THRESH_BINARY)
+edges = cv.Canny(gray, threshold1=50, threshold2=100)
 
-plt.figure(figsize=(12, 4))
+plt.figure(figsize=(20, 10))
 plt.subplot(1, 3, 1); plt.imshow(gray, cmap='gray'); plt.title("Grayscale")
 plt.subplot(1, 3, 2); plt.imshow(binary_mask, cmap="gray"); plt.title("Threshold mask")
-# plt.subplot(1, 3, 3); plt.imshow(edges, cmap="gray"); plt.title("Canny edges")
+plt.subplot(1, 3, 3); plt.imshow(edges, cmap="gray"); plt.title("Canny edges")
+plt.show()
 
 # %%
