@@ -35,7 +35,7 @@ plt.show()
 # k = cv.waitKey(10000)
 
 
-# %% Global thresholding vs. adaptive mean vs. Gaussian vs. Otsu vs. edge detection
+#%% Global thresholding vs. adaptive mean vs. Gaussian vs. Otsu vs. Canny
 _, binary_mask = cv.threshold(gray, 130, 255, cv.THRESH_BINARY)
 adaptive_mean_mask = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_MEAN_C,\
             cv.THRESH_BINARY, 11, 2)
@@ -44,38 +44,76 @@ adaptive_gaussian_mask = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUS
 # blur = cv.GaussianBlur(gray, (5,5), 0)
 _, otsu_gaussian_mask = cv.threshold(gray, 0, 255, \
                                   cv.THRESH_BINARY + cv.THRESH_OTSU)
-edges = cv.Canny(gray, threshold1=46, threshold2=52)
+edges = cv.Canny(adaptive_gaussian_mask, threshold1=125, threshold2=1100)
 
 
-#%% Plot all
+# plot all
 titles = ["Grayscale", "Threshold Mask", "Otsu Thresholding", \
-          "Adaptive Gaussian Thresholding", "Adaptive Mean Thresholding", "Canny"]
-imgs = [gray, binary_mask, otsu_gaussian_mask, adaptive_mean_mask, \
-        adaptive_gaussian_mask, edges]
+          "Adaptive Mean Thresholding", "Adaptive Gaussian Thresholding",\
+              "Canny"]
+imgs = [gray, binary_mask, otsu_gaussian_mask, \
+        adaptive_mean_mask, adaptive_gaussian_mask, edges]
 
 plt.figure(figsize=(12, 9))
 
 for i in range(len(titles)):
-    plt.subplot(2, 3, i + 1), plt.imshow(imgs[i], "gray")
+    plt.subplot(2, 3, i + 1); plt.imshow(imgs[i], "gray")
     plt.title(titles[i])
 
 plt.show()
 
-# %% Contour detection and overlaying on template image
+#%% Contour detection and overlaying on template image
 # set up contours, passed in Canny object
-contours, _ = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-print(f"Found {len(contours)} contours")
+contours, hierarchy = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+print(f"Found {len(contours)} contours. Displaying first 10")
 
-# copy rgb image for setting up overlay
+# copy rgb image for setting up overlay and draw over
 img_contours = img_rgb.copy()
 cv.drawContours(img_contours, contours, -1, (0, 255, 0), 2)
 
-for c in contours:
+for c in contours[:10]:
     area = cv.contourArea(c)
     x, y, w, h = cv.boundingRect(c)
     print(f"Area: {area:.1f}  Bounding box: x={x}, y={y}, w={w}, h={h}")
 
 plt.imshow(img_contours)
-plt.title(f'{len(contours)} contours detected')
+plt.title(f'{len(contours)} contours; pre-morph')
 plt.show()
+
+#%% Applying morphological updates
+# set up kernel typed to uint8
+kernel = np.ones((1,1), np.uint8)
+kernel_2 = np.ones((2,2), np.uint8)
+kernel_3 = np.ones((3,3), np.uint8)
+kernel_4 = np.ones((4,4), np.uint8)
+
+# kernels
+kernels = [kernel, kernel_2, kernel_3, kernel_4]
+num_kernels = len(kernels)
+
+plt.figure(figsize=(16,12)) 
+
+# plot: for each morph. transf., try it with a different kernel
+for i in range(num_kernels):
+
+    titles = [f"Open morph with {i}x{i} kernel", f"Closed morph with {i}x{i} kernel", f"Gradient morph with {i}x{i} kernel"]
+    num_titles = len(titles)
+
+    for j in range(num_titles):
+        # titles
+        k = j + 1
+        print(i, j)
+        
+        opening_morph = cv.morphologyEx(edges, cv.MORPH_OPEN, kernels[i])
+        closed_morph = cv.morphologyEx(edges, cv.MORPH_CLOSE, kernels[i])
+        gradient_morph = cv.morphologyEx(edges, cv.MORPH_GRADIENT, kernels[i])
+
+        plt.subplot(num_kernels, num_titles, i + j + 1)
+        plt.imshow(opening_morph)
+    
+    plt.title(titles[i])
+
+plt.show()
+
+
 # %%
