@@ -91,29 +91,33 @@ kernel_4 = np.ones((4,4), np.uint8)
 kernels = [kernel, kernel_2, kernel_3, kernel_4]
 num_kernels = len(kernels)
 
-plt.figure(figsize=(16,12)) 
+plt.figure(figsize=(20,15)) 
 
 # plot: for each morph. transf., try it with a different kernel
 for i in range(num_kernels):
 
-    titles = [f"Open morph with {i}x{i} kernel", f"Closed morph with {i}x{i} kernel", f"Gradient morph with {i}x{i} kernel"]
+    m = i + 1
+    titles = [f"Opening morph with {m}x{m} kernel", f"Closing morph with {m}x{m} kernel", f"Gradient morph with {m}x{m} kernel"]
     num_titles = len(titles)
 
+    opening_morph = cv.morphologyEx(edges, cv.MORPH_OPEN, kernels[i])
+    closing_morph = cv.morphologyEx(edges, cv.MORPH_CLOSE, kernels[i])
+    gradient_morph = cv.morphologyEx(edges, cv.MORPH_GRADIENT, kernels[i])
+    list_morphs = [opening_morph, closing_morph, gradient_morph]
+
     for j in range(num_titles):
-        # titles
-        k = j + 1
-        print(i, j)
-        
-        opening_morph = cv.morphologyEx(edges, cv.MORPH_OPEN, kernels[i])
-        closed_morph = cv.morphologyEx(edges, cv.MORPH_CLOSE, kernels[i])
-        gradient_morph = cv.morphologyEx(edges, cv.MORPH_GRADIENT, kernels[i])
+        # set up indexing in plot
+        subplot_idx_in_plot = i * num_titles + j + 1
 
-        plt.subplot(num_kernels, num_titles, i + j + 1)
-        plt.imshow(opening_morph)
-    
-    plt.title(titles[i])
+        plt.subplot(num_kernels, num_titles, subplot_idx_in_plot)
+        plt.imshow(list_morphs[j], "gray")
+        plt.title(titles[j])
+        plt.axis("off") # remove x/y tick marks
 
+plt.tight_layout() # auto-adjust spacing
 plt.show()
+    
+
 
 
 # %%
