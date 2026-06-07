@@ -118,7 +118,7 @@ plt.tight_layout() # auto-adjust spacing
 plt.show()
     
 
-#%% Run YOLOv8 detection
+#%% Run detection via YOLOv8
 model = YOLO('yolov8n.pt') # download 6MB "nano" model (trade accuracy for speed)
 results = model("img/ai_baby_color_straight.png") # forward pass
 
@@ -135,11 +135,33 @@ for r in results:
 annotated = results[0].plot() # BGR numpy array
 
 # convert to matplotlib for display via OpenCV
-annotated_rgb = cv.cvtColor(annotated, cv.COLOR_BGR2RGB) # conversion to mlp
+annotated_rgb = cv.cvtColor(annotated, cv.COLOR_BGR2RGB) # conversion for mlp
 plt.figure(figsize=(10,8))
 plt.imshow(annotated_rgb)
 plt.axis("off")
 plt.title("YOLOv8 Detections")
+plt.show()
+
+#%% Simple pixel time series
+# generate random signal of 60 frames via PCG64
+rng = np.random.default_rng(seed=42)
+frames = 60
+pixel_signal = np.random.normal(loc=128, scale=5, size=frames) # normal dist. of mean = 128, std = 5 simulating 60 frames in a pixel
+
+# inject defects into signal (outliers)
+pixel_signal[25] = 240
+pixel_signal[26] = 235
+
+mean_val = np.mean(pixel_signal); variance = np.var(pixel_signal)
+print(f"Mean: {mean_val:.2f}, Variance: {variance:.2f}")
+
+# plot
+plt.figure(figsize=(10,3))
+plt.plot(pixel_signal, color='steelblue')
+plt.axhline(mean_val, color='gray', linestyle='--', label='Mean')
+plt.axhline(mean_val + 3*np.std(pixel_signal), color="red", linestyle=":", label="3 * std threshold")
+plt.scatter([25, 26], pixel_signal[[25,26]], color="red", zorder=5, label="Anomaly")
+plt.legend(); plt.title("Pixel value across frames - anomaly detection")
 plt.show()
 
 # %%
