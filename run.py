@@ -118,6 +118,28 @@ plt.tight_layout() # auto-adjust spacing
 plt.show()
     
 
+#%% Run YOLOv8 detection
+model = YOLO('yolov8n.pt') # download 6MB "nano" model (trade accuracy for speed)
+results = model("img/ai_baby_color_straight.png") # forward pass
 
+for r in results:
+    boxes = r.boxes # contains all image detections containing tensor attributes
+    for box in boxes:
+        class_id= int(box.cls) # classification name extracted from the model
+        conf = float(box.conf) # tensor can be cast out
+        x1, y1, x2, y2 = box.xyxy[0].tolist() # box corners; tensor row converted to list
+        
+        # model.names = dict mapping int class IDs to readable strs from COCO dataset YOLOv8 trained on
+        print(f"Class: {model.names[class_id]}  Confidence: {conf:.2f}  Box: ({x1:.0f},{y1:.0f}) → ({x2:.0f},{y2:.0f})")
+
+annotated = results[0].plot() # BGR numpy array
+
+# convert to matplotlib for display via OpenCV
+annotated_rgb = cv.cvtColor(annotated, cv.COLOR_BGR2RGB) # conversion to mlp
+plt.figure(figsize=(10,8))
+plt.imshow(annotated_rgb)
+plt.axis("off")
+plt.title("YOLOv8 Detections")
+plt.show()
 
 # %%
