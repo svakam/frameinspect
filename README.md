@@ -15,9 +15,10 @@ Disclaimers:
 - PyTorch can be run on CPU or GPU (CUDA). 
 run_detection_segmentation.py: `pip install opencv-python numpy matplotlib pillow ipykernel jupyter ultralytics`
 run_autoencoder.py: 
-  - Run on CPU: `pip install matplotlib numpytorch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu`
+  - Run on CPU: `pip install matplotlib numpy torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu`
   - OR if NVIDIA GPU available (PyTorch-CUDA):
     1) `nvidia-smi` (note GPU Model name + CUDA Version)  
+    2) `pip install matplotlib numpy torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu<CUDA version #>`
   -  `pip install timm torchmetrics`
 
 
