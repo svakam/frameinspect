@@ -164,4 +164,3 @@ plt.scatter([25, 26], pixel_signal[[25,26]], color="red", zorder=5, label="Anoma
 plt.legend(); plt.title("Pixel value across frames - anomaly detection")
 plt.show()
 
-# %%
