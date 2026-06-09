@@ -33,8 +33,11 @@ model = SimpleNet()
 print(model)
 print(model.print_parameters())
 
-# run dummy forward pass to validate shape
-dummy_input = torch.randn(8, 784) # batch of 8 images, each flattened to 784
+print("Running forward dummy pass to validate shape...")
+
+# 2D tensor 8x784 representing batch of 8 images, each "flattened" to 784 pixels (each has normal distribution)
+dummy_input = torch.randn(8, 784) 
+
 output = model(dummy_input)
 print(f"Input shape: {dummy_input.shape}")
 print(f"Output shape: {output.shape}") # should be [8, 10]

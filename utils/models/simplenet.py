@@ -19,9 +19,10 @@ class SimpleNet(nn.Module):
         total = 0
         
         for name, param in self.named_parameters():
-            count = param.numel()
-            total += count
+            count = param.numel() # number of elements for this parameter
+            total += int(count)
 
+            # 30 spaces after name, 25 after shape, etc.
             print(f"{name:30} shape:{str(param.shape):25} params: {count:,}")
 
-        print(f"\n{"Total":30} {"":25} {total:,}")
+        print(f"\nTotal # parameters: {total}")
