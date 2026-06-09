@@ -29,7 +29,7 @@ print("\nMean:", t.mean())
 print("Sum:", t.sum())
 print("Transposed:", t.T)
 
-#%% Build neural network
+#%% Build and test simple neural network
 model_test = SimpleNet()
 print(model_test)
 print(model_test.print_parameters())
@@ -44,7 +44,7 @@ print(f"Input shape: {dummy_input.shape}")
 print(f"Output shape: {output.shape}") # should be [8, 10]
 
 
-#%% Training loop
+#%% Training loop on simple network
 # initialize synthetic dataset (stand-in for real image data)
 torch.manual_seed(42)
 X = torch.randn(1000, 784) # 1000 rand-normal dist samples, 784 features each
@@ -78,4 +78,4 @@ for epoch in range(num_epochs):
     print(f"Epoch [{epoch + 1}/{num_epochs}] Loss: {avg_loss:.4f}")
 
 print("\nTraining complete")
-# %%
+#%% 
