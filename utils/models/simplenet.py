@@ -1,6 +1,9 @@
 import torch.nn as nn
 
 class SimpleNet(nn.Module):
+    """
+    Contains 6 layers 
+    """
     def __init__(self):
         super().__init__()
         self.network = nn.Sequential(
