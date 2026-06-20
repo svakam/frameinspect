@@ -143,12 +143,12 @@ plt.title("YOLOv8 Detections")
 plt.show()
 
 #%% Simple pixel time series
-# generate random signal of 60 frames via PCG64
+# generate random signal of 60 frames via PCG64 RNG
 rng = np.random.default_rng(seed=42)
 frames = 60
-pixel_signal = np.random.normal(loc=128, scale=5, size=frames) # normal dist. of mean = 128, std = 5 simulating 60 frames in a pixel
+pixel_signal = np.random.normal(loc=128, scale=5, size=frames) # normal dist. of mean = 128, std = 5 units, simulating 60 frames in a pixel
 
-# inject defects into signal (outliers)
+# inject defects into signal at 25th & 26th frame (outliers)
 pixel_signal[25] = 240
 pixel_signal[26] = 235
 

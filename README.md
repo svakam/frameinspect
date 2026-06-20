@@ -14,7 +14,7 @@ Disclaimers:
 - Virtual env must have Python 3.10.* for compatibility/stability. 
 - PyTorch can be run on CPU or GPU (CUDA). 
 run_detection_segmentation.py: `pip install opencv-python numpy matplotlib pillow ipykernel jupyter ultralytics`
-run_autoencoder.py: 
+run_nn.py: 
   - Run on CPU: `pip install matplotlib numpy torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu`
   - OR if NVIDIA GPU available (PyTorch-CUDA):
     1) `nvidia-smi` (note GPU Model name + CUDA Version)  
